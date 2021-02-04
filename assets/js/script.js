@@ -16,11 +16,10 @@ var warningIconEl = document.querySelector("#warning");
 //this function determines validity
 var submitClick = function (event) {
   event.preventDefault();
-
-  var city = cityNameEl.value.trim();
-  console.log(city);
-  if (city) {
-    cityGetter(city);
+  var cityID = citySubmit.value;
+  console.log(cityID);
+  if (cityID) {
+    cityGetter(cityID);
 
     cityDetailsEl.textContent = "";
 
@@ -30,31 +29,26 @@ var submitClick = function (event) {
   }
 };
 
-var cityGetter = function (city) {
-  var weatherApi =
-    "api.openweathermap.org/data/2.5/weather?q=" +
-    city +
-    "&appid=45b1eaead4d9d57e63fccb644a6d266c";
+var cityGetter = function (cityID) {
+  var weatherApiKey = "aac7a25ab14d5f437c627c978531f784";
 
-  fetch(weatherApi)
-    .then(function (response) {
-      if (response.ok) {
-        console.log(response);
-        response.json().then(function (data) {
-          console.log(data);
-          showWeather(data, city);
-        });
-      } else {
-        alert(response.statusText);
-      }
+  fetch(
+    "api.openweathermap.org/data/2.5/forecast?q=" +
+      cityID +
+      "&appid=" +
+      weatherApiKey
+  )
+    .then(function (resp) {
+      return resp.json();
     })
-    .catch(function (error) {
-      alert("Connection Error");
-    });
+    .then(function (data) {
+      showWeather(data);
+    })
+    .catch(function () {});
 };
 
-var showWeather = function (city, searchInquiry) {
-  if (city.length === 0) {
+var showWeather = function (cityID) {
+  if (cityID.length === 0) {
     weatherDisplayEl.textContent = "That's not real";
 
     return;
