@@ -21,7 +21,7 @@ var submitClick = function (event) {
   if (cityID) {
     cityGetter(cityID);
 
-    cityDetailsEl.textContent = "";
+    cityNameEl.textContent = cityID;
 
     cityNameEl.value = "";
   } else {
@@ -33,28 +33,27 @@ var cityGetter = function (cityID) {
   var weatherApiKey = "aac7a25ab14d5f437c627c978531f784";
 
   fetch(
-    "api.openweathermap.org/data/2.5/forecast?q=" +
+    "https://api.openweathermap.org/data/2.5/forecast?q=" +
       cityID +
       "&appid=" +
       weatherApiKey
   )
     .then(function (resp) {
+      console.log(resp.json());
       return resp.json();
     })
     .then(function (data) {
       showWeather(data);
     })
-    .catch(function () {});
+    .catch(function () {
+      weatherDisplayEl.textContent = "That's not real";
+    });
 };
 
 var showWeather = function (cityID) {
-  if (cityID.length === 0) {
-    weatherDisplayEl.textContent = "That's not real";
-
+  if (cityID === 404) {
     return;
   }
-
-  cityNameEl.textContent = cityName;
 };
 
 cityForm.addEventListener("submit", submitClick);
