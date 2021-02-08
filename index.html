@@ -12,7 +12,7 @@
       crossorigin="anonymous"
     />
 
-    <link rel="styles" href="assets\css\styles.css" />
+    <link rel="styles" href="assets/css/styles.css" />
 
     <title>Weather Dashboard</title>
   </head>
@@ -25,37 +25,41 @@
     </div>
 
     <div class="container">
-      <div class="col-12 col-md-4">
-        <div class="card">
-          <h3 class="card-header">Search</h3>
-          <form id="user-form" class="card-body">
-            <label class="form-label" for="city">City</label>
-            <input
-              name="city"
-              id="city"
-              type="text"
-              autofocus="true"
-              class="city-input"
-            />
-            <button type="submit" class="btn btn-outline-primary">
-              Submit
-            </button>
-          </form>
+      <div class="row">
+        <div class="col-4">
+          <div class="card">
+            <h3 class="card-header">Search</h3>
+            <form id="user-form" class="card-body">
+              <label class="form-label" for="city">City</label>
+              <input
+                name="city"
+                id="city"
+                type="text"
+                autofocus="true"
+                class="city-input"
+              />
+              <button type="submit" class="btn btn-outline-primary">
+                Submit
+              </button>
+            </form>
+          </div>
         </div>
+        <div class="col-8"><ul id="weather-history"></ul></div>
+      </div>
+      <div class="row" id="weather-dash"></div>
 
-        <div class="card">
+      <!-- <div class="card">
           <h3 class="card-header" id="lastSearch"></h3>
           <div id="lastSearch" class="card-body"></div>
         </div>
-      </div>
-
-      <div class="col-12 col-md-8">
+      </div> -->
+      <!-- <div class="col-12 col-md-8">
         <h2 class="city-name" id="cityName"></h2>
         <div id="cityDetails" class="card-body description"></div>
         <p>Icon</p>
         <h2 class="degree"></h2>
         <div class="temp-description"></div>
-      </div>
+      </div> -->
     </div>
 
     <script
