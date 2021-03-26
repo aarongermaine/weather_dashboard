@@ -1,41 +1,31 @@
-//my beautiful document variables <3
+//document variables
 var cityNameEl = document.querySelector("#cityName");
 
 var citySubmit = document.querySelector("#city");
 
 var cityForm = document.querySelector("#user-form");
 
-var cityDetailsEl = document.querySelector("#cityDetails");
-
-var lastSearchEl = document.querySelector("#lastSearch");
-
-var weatherDisplayEl = document.querySelector("#weather-content");
-
-var warningIconEl = document.querySelector("#warning");
-
-var local;
-
 let forecastAlign = [];
 
-let history = ["Denver"];
+let history = [""];
 
+var weatherDash = document.getElementById("weather-dash");
 //this function determines validity
 var submitClick = function (event) {
   event.preventDefault();
 
   var cityID = citySubmit.value;
-
   if (cityID !== null) {
     cityGetter(cityID);
     history.some((h) =>
       h === cityID ? console.log("Invalid") : history.push(cityID)
     );
     localStorage.setItem("history", JSON.stringify(history));
-    cityNameEl.textContent = cityID;
-
-    cityNameEl.value = "";
+    cityNameEl.innerHTML = cityID;
   } else {
     alert("You shall not pass");
+    cityNameEl.value = "";
+    cityForm = "";
   }
 };
 
@@ -51,6 +41,7 @@ var cityGetter = async function (cityID) {
     requestOptions
   )
     .then((response) => response.json())
+
     .then((result) => {
       console.log(result);
 
@@ -58,7 +49,9 @@ var cityGetter = async function (cityID) {
       var localHistory = JSON.parse(localStorage.getItem("history"));
 
       var historyUl = document.getElementById("weather-history");
+
       var historyList = document.createElement("li");
+
       historyList.setAttribute("class", "list-group-item");
       historyList.innerHTML = null;
       localHistory.map((history) => {
@@ -67,17 +60,17 @@ var cityGetter = async function (cityID) {
       });
 
       // Weather Cards
-      var weatherDash = document.getElementById("weather-dash");
 
       var data = result.list;
 
       forecastAlign.push(data[0], data[7], data[15], data[23], data[31]);
 
       forecastAlign.map((index) => {
-        var weatherCol = document.createElement("div");
+        weatherCol = document.createElement("div");
         weatherCol.setAttribute("class", "col-2");
         var weatherCard = document.createElement("div");
         weatherCard.setAttribute("class", "card");
+
         var format = (i) =>
           new Date(i).toLocaleDateString("en-us", { weekday: "long" });
         weatherCard.innerHTML = `
@@ -91,21 +84,13 @@ var cityGetter = async function (cityID) {
         )}</li><li class="list-group-item"> <strong>High: </strong>${Math.round(
           index.main.temp_max
         )}</li></ul>`;
+
         weatherCol.appendChild(weatherCard);
+
         return weatherDash.appendChild(weatherCol);
       });
     })
     .catch((error) => console.log("error", error));
 };
-
-var showWeather = function (cityID) {
-  if (cityID === 404) {
-    return;
-  }
-};
-
-function clearForecast() {
-  document.getElementById("weather-dash").innerHTML = "";
-}
 
 cityForm.addEventListener("submit", submitClick);
