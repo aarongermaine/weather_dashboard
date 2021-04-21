@@ -89,7 +89,7 @@ const cityGetter = async (cityID) => {
             weatherCard.innerHTML = `
           <div class="card-header bg-transparent border-0">${format(
             index.dt_txt
-          )} <img src="../../assets/images/${index.weather[0].icon}.png" alt="${
+          )} <img src="/assets/images/${index.weather[0].icon}.png" alt="${
               index.weather.description
             }"/></div>
             <ul class="list-group list-group-flush"><li class="list-group-item"><strong>Low: </strong>${Math.floor(
