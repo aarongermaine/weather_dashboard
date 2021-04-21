@@ -30,7 +30,7 @@
 
 ## Testing
 
-    No testing compatibility at this moment.
+    No testing compatibility at this time.
 
 ## License
 

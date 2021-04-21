@@ -12,7 +12,7 @@
       crossorigin="anonymous"
     />
 
-    <link rel="styles" href="assets/css/styles.css" />
+    <link rel="stylesheet" href="assets/css/styles.css" />
 
     <title>Weather Dashboard</title>
   </head>
@@ -20,16 +20,17 @@
     <div class="jumbotron jumbotron-fluid">
       <div class="container">
         <h1 class="display-4">Weather Dashboard</h1>
-        <p class="lead">Your next adventure starts here</p>
+        <p class="lead text-white pl-2 pt-2">Your next adventure starts here</p>
       </div>
     </div>
-    <h2 id="cityName" class="text-center"></h2>
-
-    <div class="container">
-      <div class="row">
-        <div class="col-4">
-          <div class="card">
-            <h3 class="card-header">Search</h3>
+    <div class="container border-top border-bottom pb-4">
+      <div class="row mt-4">
+        <div class="col-12">
+          <h2 id="cityName" class="text-right mb-2"></h2>
+        </div>
+        <div class="col-4 pl-0">
+          <div class="card box-shadow">
+            <h3 class="card-header bg-light">Search</h3>
             <form id="user-form" class="card-body">
               <label class="form-label" for="city">City</label>
               <input
@@ -38,6 +39,8 @@
                 type="text"
                 autofocus="true"
                 class="city-input"
+                autocomplete="off"
+                onkeypress="return noenter()"
               />
               <button type="submit" class="btn btn-outline-primary">
                 Submit
@@ -45,16 +48,18 @@
             </form>
           </div>
         </div>
-        <div class="col-8" id="weatherCol"><ul id="weather-history"></ul></div>
+        <div class="col-8 pr-0" id="weatherCol">
+          <ul id="weather-history" class="box-shadow p-0"></ul>
+        </div>
       </div>
       <div class="row" id="weather-dash"></div>
     </div>
-
     <script
+      defer
       src="https://kit.fontawesome.com/413ca15ecb.js"
       crossorigin="anonymous"
     ></script>
 
-    <script src="assets\js\script.js"></script>
+    <script defer src="assets\js\script.js"></script>
   </body>
 </html>

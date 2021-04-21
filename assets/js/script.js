@@ -1,96 +1,114 @@
 //document variables
-var cityNameEl = document.querySelector("#cityName");
+const cityNameEl = document.querySelector("#cityName");
 
-var citySubmit = document.querySelector("#city");
+const citySubmit = document.querySelector("#city");
 
-var cityForm = document.querySelector("#user-form");
+const weatherDash = document.getElementById("weather-dash");
 
-let forecastAlign = [];
+const localHistory = JSON.parse(localStorage.getItem("history")) ?? null;
 
-let history = [""];
+const historyUl = document.getElementById("weather-history");
 
-var weatherDash = document.getElementById("weather-dash");
+let cityForm = document.querySelector("#user-form");
+
+const noenter = () => {
+  return !(window.event && window.event.keyCode == 13);
+};
+
 //this function determines validity
-var submitClick = function (event) {
+const submitClick = (event, val) => {
   event.preventDefault();
+  let cityID = citySubmit.value;
 
-  var cityID = citySubmit.value;
-  if (cityID !== null) {
-    cityGetter(cityID);
-    history.some((h) =>
-      h === cityID ? console.log("Invalid") : history.push(cityID)
-    );
-    localStorage.setItem("history", JSON.stringify(history));
-    cityNameEl.innerHTML = cityID;
+  if (cityID !== "") {
+    let historyList = document.createElement("li");
+    let historyLink = document.createElement("button");
+
+    historyList.setAttribute("class", "list-group-item");
+    historyList.setAttribute(`id`, `${cityID}`);
+
+    historyLink.setAttribute(`onclick`, `cityGetter("${cityID}")`);
+    historyLink.setAttribute(`class`, `btn btn-link`);
+    historyLink.innerHTML = `${cityID}`;
+
+    historyList.appendChild(historyLink);
+    historyUl.appendChild(historyList);
+
+    return cityGetter(cityID);
   } else {
     alert("You shall not pass");
     cityNameEl.value = "";
     cityForm = "";
+    return;
   }
 };
 
-var cityGetter = async function (cityID) {
-  var weatherApiKey = "aac7a25ab14d5f437c627c978531f784";
-  var requestOptions = {
-    method: "GET",
-    redirect: "follow",
-  };
+const cityGetter = async (cityID) => {
+  try {
+    if (cityID === "") return;
+    const weatherApiKey = "aac7a25ab14d5f437c627c978531f784";
+    const requestOptions = {
+      method: "GET",
+      redirect: "follow",
+    };
 
-  fetch(
-    `https://api.openweathermap.org/data/2.5/forecast?q=${cityID}&appid=${weatherApiKey}&units=imperial`,
-    requestOptions
-  )
-    .then((response) => response.json())
+    await fetch(
+      `https://api.openweathermap.org/data/2.5/forecast?q=${cityID}&appid=${weatherApiKey}&units=imperial`,
+      requestOptions
+    )
+      .then((response) => response.json())
+      .then((result) => {
+        let data = result.list;
 
-    .then((result) => {
-      console.log(result);
+        if (data !== undefined) {
+          if (weatherDash.hasChildNodes()) {
+            let i = 0;
+            while (i < 5) {
+              weatherDash.removeChild(document.querySelector("#weatherCard"));
+              i++;
+            }
+          }
 
-      // Weather Search History
-      var localHistory = JSON.parse(localStorage.getItem("history"));
+          let forecastAlign = [];
 
-      var historyUl = document.getElementById("weather-history");
+          cityNameEl.innerHTML = cityID;
 
-      var historyList = document.createElement("li");
+          forecastAlign.push(data[0], data[7], data[15], data[23], data[31]);
 
-      historyList.setAttribute("class", "list-group-item");
-      historyList.innerHTML = null;
-      localHistory.map((history) => {
-        historyList.innerHTML = `${history}`;
-        return historyUl.appendChild(historyList);
+          forecastAlign.forEach((index) => {
+            let weatherCard = document.createElement("div");
+            let weatherCol = document.createElement("div");
+
+            weatherCol.setAttribute("class", "col-2");
+            weatherCol.setAttribute("id", "weatherCard");
+            weatherCard.setAttribute("class", "card border-0");
+
+            let format = (i) =>
+              new Date(i).toLocaleDateString("en-us", { weekday: "long" });
+
+            weatherCard.innerHTML = `
+          <div class="card-header bg-transparent border-0">${format(
+            index.dt_txt
+          )} <img src="../../assets/images/${index.weather[0].icon}.png" alt="${
+              index.weather.description
+            }"/></div>
+            <ul class="list-group list-group-flush"><li class="list-group-item"><strong>Low: </strong>${Math.floor(
+              index.main.temp_min
+            )}</li><li class="list-group-item"> <strong>High: </strong>${Math.round(
+              index.main.temp_max
+            )}</li></ul>`;
+
+            forecastAlign = [];
+
+            weatherCol.appendChild(weatherCard);
+
+            return weatherDash.appendChild(weatherCol);
+          });
+        }
       });
-
-      // Weather Cards
-
-      var data = result.list;
-
-      forecastAlign.push(data[0], data[7], data[15], data[23], data[31]);
-
-      forecastAlign.map((index) => {
-        weatherCol = document.createElement("div");
-        weatherCol.setAttribute("class", "col-2");
-        var weatherCard = document.createElement("div");
-        weatherCard.setAttribute("class", "card");
-
-        var format = (i) =>
-          new Date(i).toLocaleDateString("en-us", { weekday: "long" });
-        weatherCard.innerHTML = `
-        <div class="card-header bg-transparent">${format(
-          index.dt_txt
-        )} <img src="../../assets/images/${index.weather[0].icon}.png" alt="${
-          index.weather.description
-        }"/></div>
-        <ul class="list-group list-group-flush"><li class="list-group-item"><strong>Low: </strong>${Math.floor(
-          index.main.temp_min
-        )}</li><li class="list-group-item"> <strong>High: </strong>${Math.round(
-          index.main.temp_max
-        )}</li></ul>`;
-
-        weatherCol.appendChild(weatherCard);
-
-        return weatherDash.appendChild(weatherCol);
-      });
-    })
-    .catch((error) => console.log("error", error));
+  } catch (error) {
+    console.error(error);
+  }
 };
 
 cityForm.addEventListener("submit", submitClick);
