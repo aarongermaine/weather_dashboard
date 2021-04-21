@@ -22,7 +22,7 @@
 
 ## Usage
 
-    Just navigate to the following link:
+    Just navigate to the following link: https://aarongermaine.github.io/weather_dashboard/
 
 ## Contributions
 
